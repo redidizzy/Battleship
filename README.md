@@ -44,6 +44,14 @@ export default {
 
 I've used tailwind
 
+I've also user dotenv
+
+By default, axios is fetching for endpoints using the base url : 127.0.0.1:3001. If you want to change this behaviour, you should create a ".env" file in the root folder with this code 
+
+```
+BASE_URL= <YOUR_NEW_AXIOS_BASE_URL>
+```
+
 ## Some Explanations
 ### Pages and components
 #### index.vue 
