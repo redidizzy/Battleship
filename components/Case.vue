@@ -7,24 +7,24 @@
          }"
     @click="$emit('clickSquare', coordinates)"
   >
-  <template  v-if="squareShip">
-  <img src="/ship-horizontal.png" v-if="squareShip.alignment === 'horizontal'" alt="">
-  <img src="/ship-vertical.png" v-if="squareShip.alignment === 'vertical'" alt="" class="h-full">
-  </template>
+    <template v-if="squareShip">
+      <img src="/ship-horizontal.png" v-if="squareShip.alignment === 'horizontal'" alt />
+      <img src="/ship-vertical.png" v-if="squareShip.alignment === 'vertical'" alt class="h-full" />
+    </template>
   </div>
 </template>
 <script>
 
 export default ({
-  props:{
-    coordinates:{
+  props: {
+    coordinates: {
       required: true,
       type: Array
     },
   },
 
   computed: {
-    squareShip(){
+    squareShip() {
       let result = this.$store.state.battleship.actualPlayerShips.find(ship => ship.coordinates[0] == this.coordinates[0] && ship.coordinates[1] == this.coordinates[1])
       return result;
     }

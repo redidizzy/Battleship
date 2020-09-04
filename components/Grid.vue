@@ -15,11 +15,6 @@ export default ({
             type: Number,
         }
     },
-    data(){
-        return {
-            ships:[]
-        }
-    },
     methods:{
         calculateCoordinates(index){
             return [index%(this.size)+1, Math.floor(index/(this.size)+1)];
