@@ -1,34 +1,16 @@
 <template>
   <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        battleship
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+    <Grid :size="8" />
   </div>
 </template>
 
 <script>
-export default {}
+import Grid from '@/components/Grid'
+export default {
+  components:{
+    Grid
+  }
+}
 </script>
 
 <style>
