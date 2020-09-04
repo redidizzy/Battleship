@@ -6,27 +6,33 @@
       class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow mb-3"
     >start</button>
     <div v-else-if="appState === 'init'" class="mb-2">
-      <h3>
-        Click on a square to place a ship - {{shipsLeft}} ships left
-      </h3>
-      <label><input type="radio" v-model="newShipDirection" value="horizontal"> Horizontal</label>
-      <label><input type="radio" v-model="newShipDirection" value="vertical"> Vertical</label><br>
-      <button v-if="shipsLeft===0" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" @click="startGame">Submit</button>
-      </div>
+      <h3>Click on a square to place a ship - {{shipsLeft}} ships left</h3>
+      <label>
+        <input type="radio" v-model="newShipDirection" value="horizontal" /> Horizontal
+      </label>
+      <label>
+        <input type="radio" v-model="newShipDirection" value="vertical" /> Vertical
+      </label>
+      <br />
+      <button
+        v-if="shipsLeft===0"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+        @click="startGame"
+      >Submit</button>
+    </div>
     <Grid :size="gridSize" />
   </div>
 </template>
 
 <script>
 import Grid from '@/components/Grid'
-import axios from '~/plugins/axios'
 export default {
   components: {
     Grid
   },
-  data(){
+  data() {
     return {
-      newShipDirection : 'horizontal',
+      newShipDirection: 'horizontal',
       gridSize: 8,
     }
   },
@@ -34,28 +40,21 @@ export default {
     appState() {
       return this.$store.state.battleship.appState
     },
-    shipsLeft(){
-      return 3 - this.$store.state.battleship.actualPlayerShips.length/2
+    shipsLeft() {
+      return 3 - this.$store.state.battleship.actualPlayerShips.length / 2
     }
   },
   watch: {
-    newShipDirection(value){
+    newShipDirection(value) {
       this.$store.commit('battleship/changeNewShipDirection', value)
     }
   },
   methods: {
     initGame() {
-      this.$store.dispatch('battleship/startGame')
+      this.$store.dispatch('battleship/initGame')
     },
-    async startGame(){
-      try{
-        const payload={
-          size: this.gridSize
-        }
-        let response = await axios.post('/create-game', payload)
-        localStorage.setItem('last-game-id', response.data.identifier)
-      }catch(error){
-      }
+    async startGame() {
+      this.$store.dispatch('battleship/startGame', {gridSize: this.gridSize})
     }
   }
 }

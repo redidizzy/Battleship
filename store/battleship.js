@@ -1,6 +1,7 @@
+
+import axios from '~/plugins/axios'
 export const state = () => ({
     actualPlayerShips: [],
-    opponentPlayerShips: [],
     appState: null,
     newShipDirection: 'horizontal'
 })
@@ -21,8 +22,17 @@ export const mutations = {
     }
 }
 export const actions = {
-    startGame({ commit }) {
+    initGame({ commit }) {
         commit('changeAppState', 'init')
+    },
+    async startGame({ commit }, {gridSize}) {
+        try {
+            const payload = {
+                size: gridSize
+            }
+            let response = await axios.post('/create-game', payload)
+            localStorage.setItem('last-game-id', response.data.identifier)
+        } catch (error) {}
     },
     addShip({ commit, state }, coordinates) {
         if (state.appState == 'init' &&
