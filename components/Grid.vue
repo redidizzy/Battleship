@@ -1,6 +1,6 @@
 <template>
     <div class="grid gap-1" :class="`grid-cols-${this.size} sm:grid-cols-${this.size} md:grid-cols-${this.size}`">
-        <Case v-for="(n, index) in size*size" :key="index" :coordinates='calculateCoordinates(index)' @clickSquare="placeShip"></Case>
+        <Case v-for="(n, index) in size*size" :key="index" :coordinates='calculateCoordinates(index)' @clickSquare="clickSquare"></Case>
     </div>
 </template>
 <script>
@@ -24,8 +24,12 @@ export default ({
         calculateCoordinates(index){
             return [index%(this.size)+1, Math.floor(index/(this.size)+1)];
         },
-        placeShip(coordinates){
-            this.$store.dispatch('battleship/addShip', coordinates) 
+        clickSquare(coordinates){
+            switch(this.$store.state.battleship.appState){
+                case 'init' : 
+                    this.$store.dispatch('battleship/addShip', coordinates) 
+                    break
+            }
         }
     }
 })

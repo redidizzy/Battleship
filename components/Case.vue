@@ -26,7 +26,6 @@ export default ({
   computed: {
     squareShip(){
       let result = this.$store.state.battleship.actualPlayerShips.find(ship => ship.coordinates[0] == this.coordinates[0] && ship.coordinates[1] == this.coordinates[1])
-      console.log(result)
       return result;
     }
   }

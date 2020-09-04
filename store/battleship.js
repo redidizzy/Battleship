@@ -41,6 +41,6 @@ export const actions = {
 
 function noCollidingShip(ships, coordinates, direction) {
     return !ships.find(ship => ship.coordinates[0] == coordinates[0] && ship.coordinates[1] == coordinates[1]) &&
-           !(direction=='horizontal' &&  (ships.find(ship => ship.coordinates[0] == coordinates[0]+1 && ship.coordinates[1] == coordinates[1]) || coordinates[0] == 8)) &&
-           !(direction=='vertical' &&  (ships.find(ship => ship.coordinates[0] == coordinates[0] && ship.coordinates[1] == coordinates[1] +1) || coordinates[1] == 8))
+        !(direction == 'horizontal' && (ships.find(ship => ship.coordinates[0] == coordinates[0] + 1 && ship.coordinates[1] == coordinates[1]) || coordinates[0] == 8)) &&
+        !(direction == 'vertical' && (ships.find(ship => ship.coordinates[0] == coordinates[0] && ship.coordinates[1] == coordinates[1] + 1) || coordinates[1] == 8))
 }
