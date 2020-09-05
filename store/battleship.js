@@ -23,8 +23,8 @@ export const mutations = {
     changeNewShipDirection(state, value) {
         state.newShipDirection = value
     },
-    addActualPlayerAttacksCoordinates(state, coordinates){
-        state.actualPlayerAttacks.push({coordinates})
+    addActualPlayerAttacksCoordinates(state, attack){
+        state.actualPlayerAttacks.push(attack)
     },
     addOpponentPlayerAttacksCoordinates(state, coordinates){
         state.opponentPlayerAttacks.push({coordinates})
@@ -77,7 +77,7 @@ export const actions = {
                 const response = await axios.post('/attack', payload)
 
                 // We update the attack of the actual players
-                commit('addActualPlayerAttacksCoordinates', coordinates)
+                commit('addActualPlayerAttacksCoordinates', response.data.playerAttack)
                 // We check if the player has won 
                 if(response.data.hasPlayerWon){
                     commit('changeAppState', 'finished')
