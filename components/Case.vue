@@ -5,6 +5,7 @@
          'cursor-pointer': isCursorPointer,
          'hover:bg-green-400' :  $store.state.battleship.appState === 'init',
          'hover:bg-red-400' : $store.state.battleship.appState==='playing' && !squareShip,
+         'bg-red-900' : isAttackedShip
          }"
     @click="$emit('clickSquare', coordinates)"
   >

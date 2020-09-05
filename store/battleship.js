@@ -24,10 +24,10 @@ export const mutations = {
         state.newShipDirection = value
     },
     addActualPlayerAttacksCoordinates(state, coordinates){
-        state.addActualPlayerAttacksCoordinates.push({coordinates})
+        state.actualPlayerAttacks.push({coordinates})
     },
     addOpponentPlayerAttacksCoordinates(state, coordinates){
-        state.addOpponentPlayerAttacksCoordinates(coordinates)
+        state.opponentPlayerAttacks.push({coordinates})
     },
     changeResult(state, result){
         state.result = result
@@ -68,22 +68,30 @@ export const actions = {
      * @param {*} coordinates : Coordinates of square to attack
      * This method serves to attack the opponent in the chosen coordinates
      */
-    async attack({commit}, coordinates) {
+    async attack({commit, state}, coordinates) {
         if(state.appState==='playing'){
             try{
                 // First we get the game id and send an ajax request to attack the opponents ships
                 const identifier = localStorage.getItem('current-game-id')
                 const payload = {coordinates, identifier}
                 const response = await axios.post('/attack', payload)
-                // Then we update the coordinates of the attacks(both player and opponent)
+
+                // We update the attack of the actual players
                 commit('addActualPlayerAttacksCoordinates', coordinates)
-                commit('addOpponentPlayerAttacksCoordinates', response.data.opponentCoordinates)
-                // If the axios request returns a 'finished' parameter, it means the game is finished
-                // We have to update the app state and the result
-                if(response.data.finished){
+                // We check if the player has won 
+                if(response.data.hasPlayerWon){
                     commit('changeAppState', 'finished')
-                    commit('changeResult', response.data.result)
+                    commit('changeResult', 'won')
+                }else{
+                    commit('addOpponentPlayerAttacksCoordinates', response.data.opponentAttack)
+                    // If the axios request returns a 'finished' parameter, it means the game is finished
+                    // We have to update the app state and the result
+                    if(response.data.hasOpponentWon){
+                        commit('changeAppState', 'finished')
+                        commit('changeResult', 'lost')
+                    }
                 }
+
             }catch(error){
                 console.log(error)
             }
