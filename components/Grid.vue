@@ -23,7 +23,10 @@ export default ({
             switch(this.$store.state.battleship.appState){
                 case 'init' : 
                     this.$store.dispatch('battleship/addShip', coordinates) 
-                    break
+                    break;
+                case 'playing' :
+                    this.$store.dispatch('battleship/attack', coordinates)
+                    break;
             }
         }
     }

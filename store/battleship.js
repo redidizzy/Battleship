@@ -3,7 +3,10 @@ import axios from '~/plugins/axios'
 export const state = () => ({
     actualPlayerShips: [],
     appState: null,
-    newShipDirection: 'horizontal'
+    newShipDirection: 'horizontal',
+    actualPlayerAttacks: [],
+    opponentPlayerAttacks: [],
+    result : null,
 })
 export const mutations = {
     placeActualPlayerShip(state, coordinates) {
@@ -19,6 +22,15 @@ export const mutations = {
     },
     changeNewShipDirection(state, value) {
         state.newShipDirection = value
+    },
+    addActualPlayerAttacksCoordinates(state, coordinates){
+        state.addActualPlayerAttacksCoordinates.push({coordinates})
+    },
+    addOpponentPlayerAttacksCoordinates(state, coordinates){
+        state.addOpponentPlayerAttacksCoordinates(coordinates)
+    },
+    changeResult(state, result){
+        state.result = result
     }
 }
 export const actions = {
@@ -30,12 +42,15 @@ export const actions = {
             const payload = {
                 size: gridSize
             }
-            let response = await axios.post('/create-game', payload)
-            localStorage.setItem('last-game-id', response.data.identifier)
-        } catch (error) {}
+            const response = await axios.post('/create-game', payload)
+            localStorage.setItem('current-game-id', response.data.identifier)
+            commit('changeAppState', 'playing')
+        } catch (error) {
+            console.log(error)
+        }
     },
     addShip({ commit, state }, coordinates) {
-        if (state.appState == 'init' &&
+        if (state.appState === 'init' &&
             state.actualPlayerShips.length < 6 &&
             noCollidingShip(state.actualPlayerShips, coordinates, state.newShipDirection)) {
             commit('placeActualPlayerShip', coordinates)
@@ -44,6 +59,23 @@ export const actions = {
             }
             if (state.newShipDirection == 'vertical') {
                 commit('placeActualPlayerShip', [coordinates[0], coordinates[1] + 1])
+            }
+        }
+    },
+    async attack({commit}, coordinates) {
+        if(state.appState==='playing'){
+            try{
+                const identifier = localStorage.getItem('current-game-id')
+                const payload = {coordinates, identifier}
+                const response = await axios.post('/attack', payload)
+                commit('addActualPlayerAttacksCoordinates', coordinates)
+                commit('addOpponentPlayerAttacksCoordinates', response.data.opponentCoordinates)
+                if(response.data.finished){
+                    commit('changeAppState', 'finished')
+                    commit('changeResult', response.data.result)
+                }
+            }catch(error){
+                console.log(error)
             }
         }
     }

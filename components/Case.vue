@@ -2,8 +2,9 @@
   <div
     class="bg-gray-400 w-12 h-12 flex justify-center items-center"
     :class="{
-         'cursor-pointer': $store.state.battleship.appState === 'init',
+         'cursor-pointer': isCursorPointer,
          'hover:bg-green-400' :  $store.state.battleship.appState === 'init',
+         'hover:bg-red-400' : $store.state.battleship.appState==='playing' && !squareShip,
          }"
     @click="$emit('clickSquare', coordinates)"
   >
@@ -27,7 +28,11 @@ export default ({
     squareShip() {
       let result = this.$store.state.battleship.actualPlayerShips.find(ship => ship.coordinates[0] == this.coordinates[0] && ship.coordinates[1] == this.coordinates[1])
       return result;
-    }
+    },
+    isCursorPointer(){
+      return  this.$store.state.battleship.appState === 'init'  || this.$store.state.battleship.appState === 'playing'
+    },
+
   }
 })
 </script>
