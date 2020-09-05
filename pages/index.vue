@@ -20,7 +20,11 @@
         @click="startGame"
       >Submit</button>
     </div>
-    <Grid :size="gridSize" />
+    <Grid :size="gridSize" class="mb-3"/>
+
+    <button class="bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 rounded" v-if="gameToLoad && (!appState || appState=='init')"  @click="loadGame">Load Game</button>
+    <button class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded" v-if="appState == 'playing'" @click="createNewGame">New Game</button>
+
   </div>
 </template>
 
@@ -42,6 +46,9 @@ export default {
     },
     shipsLeft() {
       return 3 - this.$store.state.battleship.actualPlayerShips.length / 2
+    },
+    gameToLoad(){
+      return this.$store.state.battleship.savedGameId
     }
   },
   watch: {
@@ -53,9 +60,18 @@ export default {
     initGame() {
       this.$store.dispatch('battleship/initGame')
     },
-    async startGame() {
+    startGame() {
       this.$store.dispatch('battleship/startGame', {gridSize: this.gridSize})
+    },
+    createNewGame(){
+      this.$store.dispatch('battleship/createNewGame')
+    },
+    loadGame(){
+      this.$store.dispatch('battleship/loadGame')
     }
+  },
+  created(){
+    this.$store.dispatch('battleship/updateSavedGameId')
   }
 }
 </script>
