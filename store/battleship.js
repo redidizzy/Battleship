@@ -62,14 +62,24 @@ export const actions = {
             }
         }
     },
+    /**
+     * 
+     * @param {commit} param0 : callback to commit a mutation
+     * @param {*} coordinates : Coordinates of square to attack
+     * This method serves to attack the opponent in the chosen coordinates
+     */
     async attack({commit}, coordinates) {
         if(state.appState==='playing'){
             try{
+                // First we get the game id and send an ajax request to attack the opponents ships
                 const identifier = localStorage.getItem('current-game-id')
                 const payload = {coordinates, identifier}
                 const response = await axios.post('/attack', payload)
+                // Then we update the coordinates of the attacks(both player and opponent)
                 commit('addActualPlayerAttacksCoordinates', coordinates)
                 commit('addOpponentPlayerAttacksCoordinates', response.data.opponentCoordinates)
+                // If the axios request returns a 'finished' parameter, it means the game is finished
+                // We have to update the app state and the result
                 if(response.data.finished){
                     commit('changeAppState', 'finished')
                     commit('changeResult', response.data.result)
