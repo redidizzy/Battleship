@@ -71,7 +71,7 @@ export const actions = {
      */
     async attack({commit, state}, coordinates) {
         if(state.appState==='playing'){
-            if(state.actualPlayerAttacks.find(attack => attack.coordinates[0] == coordinates[0] && attack.coordinates[1] == coordinates[1])) return ;
+            if(state.actualPlayerAttacks.find(attack => attack.coordinates[0] == coordinates[0] && attack.coordinates[1] == coordinates[1]) || state.actualPlayerShips.find(ship => ship.coordinates[0] == coordinates[0] && ship.coordinates[1] == coordinates[1])) return ;
             try{
                 // First we get the game id and send an ajax request to attack the opponents ships
                 const identifier = localStorage.getItem('current-game-id')
