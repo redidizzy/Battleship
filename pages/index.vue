@@ -20,11 +20,32 @@
         @click="startGame"
       >Submit</button>
     </div>
-    <Grid :size="gridSize" class="mb-3"/>
+    <Grid :size="gridSize" class="mb-3" />
+    <div v-if="appState =='finished' || true" class="mb-3">
+      <template v-if="result=='won'">
+        <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">Yay !</div>
+        <div class="border border-t-0 border-green-400 rounded-b bg-green-100 px-4 py-3 text-green-700">
+          <p>Congratulations, you have won this game !</p>
+        </div>
+      </template>
+      <template v-else-if="result=='lost'">
+        <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">Oops !</div>
+        <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+          <p>It seems like you've lost this game :(</p>
+        </div>
+      </template>
+    </div>
 
-    <button class="bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 rounded" v-if="gameToLoad && (!appState || appState=='init')"  @click="loadGame">Load Game</button>
-    <button class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded" v-if="appState == 'playing'" @click="createNewGame">New Game</button>
-
+    <button
+      class="bg-purple-500 hover:bg-purple-400 text-white font-bold py-2 px-4 border-b-4 border-purple-700 hover:border-purple-500 rounded"
+      v-if="gameToLoad && (!appState || appState=='init')"
+      @click="loadGame"
+    >Load Game</button>
+    <button
+      class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 border-b-4 border-green-700 hover:border-green-500 rounded"
+      v-if="appState == 'playing' || appState == 'finished'"
+      @click="createNewGame"
+    >New Game</button>
   </div>
 </template>
 
@@ -47,8 +68,11 @@ export default {
     shipsLeft() {
       return 3 - this.$store.state.battleship.actualPlayerShips.length / 2
     },
-    gameToLoad(){
+    gameToLoad() {
       return this.$store.state.battleship.savedGameId
+    },
+    result(){
+      return this.$store.state.battleship.result
     }
   },
   watch: {
@@ -61,16 +85,16 @@ export default {
       this.$store.dispatch('battleship/initGame')
     },
     startGame() {
-      this.$store.dispatch('battleship/startGame', {gridSize: this.gridSize})
+      this.$store.dispatch('battleship/startGame', { gridSize: this.gridSize })
     },
-    createNewGame(){
+    createNewGame() {
       this.$store.dispatch('battleship/createNewGame')
     },
-    loadGame(){
+    loadGame() {
       this.$store.dispatch('battleship/loadGame')
     }
   },
-  created(){
+  created() {
     this.$store.dispatch('battleship/updateSavedGameId')
   }
 }
