@@ -26,8 +26,8 @@ export const mutations = {
     addActualPlayerAttacksCoordinates(state, attack){
         state.actualPlayerAttacks.push(attack)
     },
-    addOpponentPlayerAttacksCoordinates(state, coordinates){
-        state.opponentPlayerAttacks.push({coordinates})
+    addOpponentPlayerAttacksCoordinates(state, attack){
+        state.opponentPlayerAttacks.push(attack)
     },
     changeResult(state, result){
         state.result = result
@@ -37,10 +37,11 @@ export const actions = {
     initGame({ commit }) {
         commit('changeAppState', 'init')
     },
-    async startGame({ commit }, {gridSize}) {
+    async startGame({ commit, state}, {gridSize}) {
         try {
             const payload = {
-                size: gridSize
+                size: gridSize,
+                playerShips: state.actualPlayerShips
             }
             const response = await axios.post('/create-game', payload)
             localStorage.setItem('current-game-id', response.data.identifier)
@@ -70,6 +71,7 @@ export const actions = {
      */
     async attack({commit, state}, coordinates) {
         if(state.appState==='playing'){
+            if(state.actualPlayerAttacks.find(attack => attack.coordinates[0] == coordinates[0] && attack.coordinates[1] == coordinates[1])) return ;
             try{
                 // First we get the game id and send an ajax request to attack the opponents ships
                 const identifier = localStorage.getItem('current-game-id')

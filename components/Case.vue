@@ -6,7 +6,6 @@
          'hover:bg-green-400' :  $store.state.battleship.appState === 'init',
          'hover:bg-red-400' : $store.state.battleship.appState==='playing' && !squareShip,
          'bg-red-900' : isAttackedShip,
-         'bg-green-900' : isSuccessfullAttack
          }"
     @click="$emit('clickSquare', coordinates)"
   >
@@ -15,7 +14,7 @@
       <img src="/ship-vertical.png" v-if="squareShip.alignment === 'vertical'" alt class="h-full" />
     </template>
     <template v-if="squareAttacked">
-      <img src="/hit.png" v-if="squareAttacked.hasOpponentShip" alt />
+      <img src="/hit.png" v-if="squareAttacked.hasTouchedOpponentShip" alt />
       <img src="/miss.png" v-else alt class="h-full" />
     </template>
   </div>
