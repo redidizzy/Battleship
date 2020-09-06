@@ -60,7 +60,9 @@ export const actions = {
                 playerShips: state.actualPlayerShips
             }
             const response = await axios.post('/create-game', payload)
-            localStorage.setItem('current-game-id', response.data.identifier)
+            const id = response.data.identifier
+            localStorage.setItem('current-game-id', id)
+            commit('changeSavedGameId', id)
             commit('changeAppState', 'playing')
         } catch (error) {
             console.log(error)
